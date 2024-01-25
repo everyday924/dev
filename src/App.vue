@@ -16,7 +16,7 @@ import { RouterView } from 'vue-router'
 }
 .footer {
   width: 100vw;
-  color: white;
+  color: #666;
   position: fixed;
   bottom: 10px;
   text-align: center;
