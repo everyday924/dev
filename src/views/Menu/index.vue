@@ -55,11 +55,16 @@
         </el-scrollbar>
       </el-header>
 
-      <el-main>
+      <el-scrollbar style="background-color: #eeeeee;">
         <keep-alive>
-          <router-view></router-view>
+          <router-view 
+          style="background: white;
+          margin: 10px; 
+          border-radius: 5px;
+          padding: 15px;
+          box-sizing: border-box;"></router-view>
         </keep-alive>
-      </el-main>
+      </el-scrollbar>
     </el-container>
   </el-container>
 </template>
@@ -145,13 +150,10 @@ watch(route,()=>{
 .layout-container-demo .el-header {
   position: relative;
   color: var(--el-text-color-primary);
-  border-bottom: 1px solid #0c1d2e;
+  box-shadow: 0 0 3px #00000010;
 }
 .layout-container-demo .el-menu {
   border-right: none;
-}
-.layout-container-demo .el-main {
-  padding: 0;
 }
 .layout-container-demo .toolbar {
   display: inline-flex;
@@ -160,9 +162,6 @@ watch(route,()=>{
   height: 100%;
   right: 20px;
 }
-
-
-
 .layout-right {
   .header{
     display: flex;
