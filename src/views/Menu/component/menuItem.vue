@@ -27,21 +27,23 @@
 
         <!-- 二级目录 -->
         <el-sub-menu :index="index" v-else>
-            <template #title>
-                <a v-if="item?.isLink" :href="item.path" target="_blank">
+            <template #title  v-if="item?.isLink">
+                <a :href="item.path" target="_blank">
                     <el-icon><Star /></el-icon>
                     <span> {{ item?.title }}</span>
                 </a>
+            </template>
 
-                <router-link v-else-if="item?.path" :to="item?.path">
+            <template #title v-else-if="item?.path">
+                <router-link :to="item?.path">
                     <el-icon><Star /></el-icon>
                     <span> {{ item?.title }}</span>
                 </router-link>
+            </template>
 
-                <div v-else>
-                    <el-icon><Star /></el-icon>
-                    <span> {{ item?.title }}</span>
-                </div>
+            <template #title  v-else>
+                <el-icon><Star /></el-icon>
+                <span> {{ item?.title }}</span>
             </template>
 
             <el-menu-item-group>
@@ -54,7 +56,6 @@
             </el-menu-item-group>
         </el-sub-menu>
     </template>
-   
 </template>
 
 <script setup lang="ts">

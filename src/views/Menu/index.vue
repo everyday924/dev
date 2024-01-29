@@ -5,7 +5,7 @@
       <el-header>
         <div class="header">
           <div style="display: flex;align-items: center;">
-            <el-icon @click="handleCollapsa()">
+            <el-icon @click="handleCollapsa()" class="pointer collapsa">
               <Expand v-if="isCollapse" />
               <Fold v-else />
             </el-icon>
@@ -15,7 +15,7 @@
             </el-breadcrumb>
           </div>
 
-          <div class="toolbar">
+          <div class="toolbar pointer">
             <!-- 搜索 -->
             <el-icon><Search /></el-icon>
             <!-- 全屏 -->
@@ -42,11 +42,11 @@
 
         <el-scrollbar>
           <el-radio-group v-model="tabPosition" style="margin-top: 10px;flex-wrap:nowrap;">
-              <router-link v-for="item,index in tabList" :to="item?.path" :key="index"
+              <router-link v-for="item,index in tabList" :to="item?.path" :key="item?.path"
               >
                 <el-radio-button :label="item?.path">
                     <span>{{ item?.title }}</span>
-                    <el-icon @click.prevent.stop="closeSelectedTag(item)" v-if="index">
+                    <el-icon @click.prevent.stop="closeSelectedTag(item, index)" v-if="index">
                       <Close />
                     </el-icon>
                 </el-radio-button>
@@ -62,7 +62,8 @@
           margin: 10px; 
           border-radius: 5px;
           padding: 15px;
-          box-sizing: border-box;"></router-view>
+          box-sizing: border-box;"
+          :key="route.fullPath"></router-view>
         </keep-alive>
       </el-scrollbar>
     </el-container>
@@ -94,12 +95,23 @@ const handleCollapsa = () => {
 
 // 面包屑数据
 const breadcrumbList = ref([])
-const getBreadcrumb = () => {
-  breadcrumbList.value = route.matched.filter((item) => item.meta?.title)
+const getBreadcrumb = (data:[]) => {
+  const arr = data.filter(item => {
+    // iframe的meta是一个数组这里做下转换
+    if(Array.isArray(item?.meta)){
+      item.meta.forEach(v => {
+        if(v.url == route.params.src) {
+          item.meta = { title: v.name }
+        }
+      })
+    }
+    return item.meta?.title
+  })
+  breadcrumbList.value = arr
 }
 
 // 标签
-const tabPosition = ref()
+const tabPosition = ref(route.path)
 const data = store.menuData
 const tabList = ref([]) 
 tabList.value = JSON.parse(sessionStorage.getItem('tabList')) || []
@@ -117,15 +129,20 @@ const getTabList = (data:[]) => {
   sessionStorage.setItem('tabList', JSON.stringify(tabList.value))
 }
 // 删除标签
-const closeSelectedTag = (item:Object) => {
-  let index = 0
-  tabList.value = tabList.value.filter((v,i)=>{
-    index = i
-   return item.path !== v.path
-  })
-  tabPosition.value = tabList.value[index-1].path
-  sessionStorage.setItem('tabList', JSON.stringify(tabList.value))
-  router.push(tabPosition.value)
+const closeSelectedTag = (item:Object, index:Number) => {
+  const data = JSON.parse(JSON.stringify(tabList.value))
+  
+  // 根据下标删除
+  data.splice(index, 1)
+  tabList.value = data
+  sessionStorage.setItem('tabList', JSON.stringify(data))
+
+  // 最后一个标签删除，跳转到前一个标签
+  if(tabPosition.value == item.path && index == data.length){
+    tabPosition.value = data[index - 1].path
+    router.push(tabPosition.value)
+  }
+  
 }
 
 /** 监听路由，
@@ -133,12 +150,12 @@ const closeSelectedTag = (item:Object) => {
  * */
 watch(route,()=>{
     // 面包屑
-    getBreadcrumb()
-
+    const matched = JSON.parse(JSON.stringify(route.matched))
+    getBreadcrumb(matched)
     // 标签
     getTabList(data)
     tabPosition.value = route.path
-
+    
     // 
 },{
     immediate:true,
@@ -152,9 +169,7 @@ watch(route,()=>{
   color: var(--el-text-color-primary);
   box-shadow: 0 0 3px #00000010;
 }
-.layout-container-demo .el-menu {
-  border-right: none;
-}
+
 .layout-container-demo .toolbar {
   display: inline-flex;
   align-items: center;
@@ -162,11 +177,18 @@ watch(route,()=>{
   height: 100%;
   right: 20px;
 }
+
+
+:deep(.el-scrollbar__view) {
+    .el-menu {
+      border-right: none !important;
+    }
+}
+
 .layout-right {
   .header{
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
     align-items: center;
   }
   .el-icon {
@@ -174,4 +196,11 @@ watch(route,()=>{
   }
 }
 
+.pointer{
+  cursor: pointer
+}
+
+.collapsa {
+  font-weight: 800;
+}
 </style>

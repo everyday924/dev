@@ -61,11 +61,14 @@ const props = defineProps({
     width: 200px;
     min-height: 400px;
   }
+}
 
-  :deep(.el-menu) {
-    .is-active {
-      // background-color: #1990ff !important;
+
+:deep(.el-sub-menu) {
+    &.is-active {
+      >.el-tooltip__trigger {
+        color: #1990ff !important;
+      }
     }
-  }
 }
 </style>

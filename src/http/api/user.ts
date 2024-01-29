@@ -47,11 +47,21 @@ export const getMenuList = ()=> {
             path:'',
             hidden:true,
             key: '404'
-        },{
-            title:'开源地址',
-            isLink:true,
-            path:'https://github.com/everyday924/vue-project',
-            key:'github',
+        },
+        {
+            title:'站内链接',
+            key:'iframe',
+            childs: [
+                {
+                    title:'高德地图',
+                    path:'/iframe/https://www.amap.com/',
+                    key: '/iframe/https://www.amap.com/',
+                },{
+                    title:'vue3',
+                    path:'/iframe/https://vue3js.cn/',
+                    key: '/iframe/https://vue3js.cn/',
+                }
+            ]
         },
         {
             title:'外链',
@@ -89,7 +99,8 @@ export const getMenuList = ()=> {
                     key: 'https://www.zhansousou.com/',
                 },
             ],
-        }, {
+        }, 
+        {
             title:'多级菜单',
             key:'/system',
             childs:[
@@ -110,6 +121,17 @@ export const getMenuList = ()=> {
                     key: '/system2',
                 },
             ],
+        },
+        {
+            title:'系统管理',
+            key:'/table',
+            childs: [
+                {
+                    title:'用户管理',
+                    path:'/tableUser',
+                    key: '/tableUser',
+                }
+            ]
         },
     ];
     return Promise.resolve({
