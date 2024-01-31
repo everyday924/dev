@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { userStore } from '@/stores/user'
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -6,6 +9,20 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/login/login.vue')
+    },
+    {
+      path: "/404",
+      name: '404',
+      component: () => import('../views/error/404.vue')
+    },
+    {
+      path: "/:catchAll(.*)",
+      redirect: '/404'
+    },
+    {
+      path: '/403',
+      name: '403',
+      component: () => import('../views/error/403.vue')
     },
     {
       path: '/',
@@ -104,6 +121,16 @@ router.beforeEach((to, from, next) => {
   //获取token
   const tokenStr = window.sessionStorage.getItem('token')
   if (!tokenStr) return next('/login')
+
+  // 403
+  // const store = userStore();
+  // const menuData = store.menuData;  
+  // const newMenuData = menuData.map((v:any)=>v.title)
+  // console.log(newMenuData);
+  
+  // if(to.meta.title && newMenuData.length && !newMenuData.includes(to.meta.title)) {
+  //   return next('/403')
+  // }
   next()
 })
 

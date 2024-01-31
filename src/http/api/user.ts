@@ -1,5 +1,4 @@
 // 用户信息
-
 import instance from '../request'
 
 // 用户信息数据接口
@@ -12,11 +11,7 @@ export const getUserInfo = ()=> {
     return Promise.resolve({
         "msg": "操作成功",
         "code": 200,
-        data:{
-            "userName": "admin",
-            "nickName": "管理员",
-            "avatar":'https://s11.ax1x.com/2023/12/15/pihx4js.jpg',
-        },
+        data: JSON.parse(sessionStorage.getItem('userInfo')),
     });
 }
 
@@ -36,7 +31,7 @@ export const getMenuList = ()=> {
     //     data: data
     // })
 
-    const menuList : Object = [
+    let menuList : Array<Object>  = [
         {
             title:'首页',
             path:'/home',
@@ -44,9 +39,15 @@ export const getMenuList = ()=> {
         },
         {
             title:'404页面',
-            path:'',
+            path:'/404',
             hidden:true,
             key: '404'
+        },
+        {
+            title:'403页面',
+            path:'/403',
+            hidden:true,
+            key: '403'
         },
         {
             title:'站内链接',
@@ -122,18 +123,24 @@ export const getMenuList = ()=> {
                 },
             ],
         },
-        {
-            title:'系统管理',
-            key:'/table',
-            childs: [
-                {
-                    title:'用户管理',
-                    path:'/tableUser',
-                    key: '/tableUser',
-                }
-            ]
-        },
     ];
+    const userInfo = sessionStorage.getItem('userInfo')
+    if(userInfo && JSON.parse(userInfo).user == 'admin') { // 模拟管理员登录
+        const data = [
+            {
+                title:'系统管理',
+                key:'/table',
+                childs: [
+                    {
+                        title:'用户管理',
+                        path:'/tableUser',
+                        key: '/tableUser',
+                    }
+                ]
+            }
+        ]
+        menuList = menuList.concat(data)
+    }
     return Promise.resolve({
         "msg": "操作成功",
         "code": 200,

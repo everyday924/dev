@@ -153,7 +153,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
       
       // 跳转首页保存token
       router.push({ path: "/" })
-      window.sessionStorage.setItem('token', '111')
+      window.sessionStorage.setItem('token', ruleFormData.captcha)
+      window.sessionStorage.setItem('userInfo', JSON.stringify(ruleFormData))
     } else {
       console.log('error submit!')
       return false

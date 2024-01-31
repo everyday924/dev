@@ -25,7 +25,7 @@
             <el-dropdown>
               <div>
                 <el-icon><Setting /></el-icon>
-                <span>admin</span>
+                <span>{{ store.userData.user }}</span>
               </div>
 
               <template #dropdown>
@@ -77,15 +77,19 @@ import Menus from './component/menu.vue'
 import {toggleFullScreen, deepEqual} from '@/common/tools'
 import { useRoute, useRouter } from "vue-router";
 import { userStore } from '@/stores/user';
-const store = userStore()
+const store = userStore();
 const router = useRouter();
 const route = useRoute();
 
 // 退出登录
 const signOut = () => {
   router.push('/login')
-  sessionStorage.removeItem('token')
+  sessionStorage.clear()
 }
+
+// 用户信息数据
+store.handleUserData()
+
 
 // 折叠面板
 const isCollapse = ref(false)
