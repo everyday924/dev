@@ -127,7 +127,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   formEl.validate(async (valid) => {
     if (valid) {
       const ruleFormData = {...ruleForm}
-      console.log(ruleFormData,'submit!')
+      // console.log(ruleFormData,'submit!')
       // 接口返回缺少参数，暂时不判断
       // const data = await checkPic({code: ruleForm.captcha, key})
       // if(data.data.code == 200) { //验证图片成功

@@ -115,6 +115,19 @@ const router = createRouter({
   ]
 })
 
+// 获取所有路径
+const setNewData = (data:Array<any>, result:Array<string>) => {
+   data.filter(v =>{
+    if(v.path) {
+      result.push(v.path)
+    }
+    if(v.childs) {
+      setNewData(v.childs, result)
+    }
+  })
+  return result
+}
+
 //挂载路由导航守卫,控制页面访问权限
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') return next();
@@ -123,14 +136,12 @@ router.beforeEach((to, from, next) => {
   if (!tokenStr) return next('/login')
 
   // 403
-  // const store = userStore();
-  // const menuData = store.menuData;  
-  // const newMenuData = menuData.map((v:any)=>v.title)
-  // console.log(newMenuData);
-  
-  // if(to.meta.title && newMenuData.length && !newMenuData.includes(to.meta.title)) {
-  //   return next('/403')
-  // }
+  const store = userStore();
+  const menuData = store.menuData;  
+  const newMenuData = setNewData(menuData, [])
+  if(!newMenuData.includes(to.path)) {
+    return next('/403')
+  }
   next()
 })
 

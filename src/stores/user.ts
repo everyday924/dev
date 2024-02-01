@@ -19,7 +19,6 @@ export const userStore = defineStore('user', () => {
     const res = await getUserInfo()
     if(res.code == 200) {
       userData.value = res.data
-      console.log(res.data);
     }
   }
   
