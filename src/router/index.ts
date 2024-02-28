@@ -139,7 +139,7 @@ router.beforeEach((to, from, next) => {
   const store = userStore();
   const menuData = store.menuData;  
   const newMenuData = setNewData(menuData, [])
-  if(!newMenuData.includes(to.path)) {
+  if(newMenuData.length && !newMenuData.includes(to.path)) {
     return next('/403')
   }
   next()
